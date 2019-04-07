@@ -30,7 +30,6 @@ class CocktailSkill(MycroftSkill):
                 'ingredients': ', '.join(cocktail[:-1]),
                 'final_ingredient': cocktail[-1]})
             time.sleep(1)
-            self.speak(cocktail['strInstructions'])
             self.set_context('IngredientContext', str(cocktail))
         else:
             self.speak_dialog('NotFound')
