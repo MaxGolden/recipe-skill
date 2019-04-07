@@ -54,7 +54,7 @@ def search_nutrients(foodname):
 
 class RecipeSkill(MycroftSkill):
     @intent_file_handler('recipe.intent')
-    def get_recipie(self, message):
+    def get_recipe(self, message):
         recipe = search_dish(message.data['dish'])
         if recipe:
             ingredients = recipe['ingredientLines']
@@ -78,7 +78,7 @@ class RecipeSkill(MycroftSkill):
             self.speak_dialog('NotFound')
 
     @intent_file_handler('food.intent')
-    def get_recipie(self, message):
+    def get_nutrition(self, message):
         nutrients = search_nutrients(message.data['food'])
         if nutrients:
 
