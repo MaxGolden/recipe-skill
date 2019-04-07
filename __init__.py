@@ -12,42 +12,71 @@ def search_dish(name):
     r = requests.get(API_URL, params={'q': name})
     if (200 <= r.status_code < 300 and 'hits' in r.json() and
             r.json()['hits']):
-        return r.json()['hits'][0]['recipe']['ingredientLines']
+        return r.json()['hits'][0]['recipe']
     else:
         return None
 
-# def ingredients(dish):
-#     ret = dish.recipe.ingredientLines
-#     return ret
-
-
-class CocktailSkill(MycroftSkill):
+class RecipeSkill(MycroftSkill):
     @intent_file_handler('recipe.intent')
     def get_recipie(self, message):
-        cocktail = search_dish(message.data['dish'])
-        if cocktail:
+        recipe = search_dish(message.data['dish'])
+        if recipe:
+            ingredients = recipe['ingredientLines']
+            calories = "the total calories is " + str(round(recipe['calories'], 2))
+            totalNutr = recipe['totalNutrients']
+            totalNutrlist = ["the total nutrients are"]
+            for key, value in totalNutr.items():
+                totalNutrlist.append(' '.join((value['label'], str(round(value['quantity'], 2)),
+                                               value['unit'])))
             self.speak_dialog('YouWillNeed', {
-                'ingredients': ', '.join(cocktail[:-1]),
-                'final_ingredient': cocktail[-1]})
+                'ingredients': ', '.join(ingredients[:-1]),
+                'final_ingredient': ingredients[-1]})
             time.sleep(1)
-            self.set_context('IngredientContext', str(cocktail))
+            self.speak(calories)
+
+            self.set_context('IngredientContext', str(ingredients))
+            self.set_context('caloriesContext', str(calories))
+            self.set_context('totalNutrlistContext', str(totalNutrlist))
+
         else:
             self.speak_dialog('NotFound')
 
-    def repeat_ingredients(self, ingredients):
-        self.speak(ingredients)
+    def repeat_context(self, context):
+        self.speak(context)
 
     @intent_handler(AdaptIntent().require('Ingredients').require('What')
                                  .require('IngredientContext'))
     def what_were_ingredients(self, message):
-        return self.repeat_ingredients(message.data['IngredientContext'])
+        return self.repeat_context(message.data['IngredientContext'])
 
     @intent_handler(AdaptIntent().require('Ingredients').require('TellMe')
                                  .require('Again')
                                  .require('IngredientContext'))
     def tell_ingredients_again(self, message):
-        return self.repeat_ingredients(message.data['IngredientContext'])
+        return self.repeat_context(message.data['IngredientContext'])
+
+    @intent_handler(AdaptIntent().require('calories').require('What')
+                                 .require('caloriesContext'))
+    def what_were_calories(self, message):
+        return self.repeat_context(message.data['caloriesContext'])
+
+    @intent_handler(AdaptIntent().require('calories').require('TellMe')
+                                 .require('Again')
+                                 .require('caloriesContext'))
+    def tell_calories_again(self, message):
+        return self.repeat_context(message.data['caloriesContext'])
+
+    @intent_handler(AdaptIntent().require('nutrition').require('What')
+                    .require('totalNutrlistContext'))
+    def what_were_nutrition(self, message):
+        return self.repeat_context(message.data['totalNutrlistContext'])
+
+    @intent_handler(AdaptIntent().require('nutrition').require('TellMe')
+                    .require('Again')
+                    .require('totalNutrlistContext'))
+    def tell_nutrition_again(self, message):
+        return self.repeat_context(message.data['totalNutrlistContext'])
 
 
 def create_skill():
-    return CocktailSkill()
+    return RecipeSkill()
