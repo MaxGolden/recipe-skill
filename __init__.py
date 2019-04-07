@@ -55,6 +55,7 @@ class RecipeSkill(MycroftSkill):
     def tell_ingredients_again(self, message):
         return self.repeat_context(message.data['IngredientContext'])
 
+
     @intent_handler(AdaptIntent().require('calories').require('What')
                                  .require('caloriesContext'))
     def what_were_calories(self, message):
@@ -66,13 +67,13 @@ class RecipeSkill(MycroftSkill):
     def tell_calories_again(self, message):
         return self.repeat_context(message.data['caloriesContext'])
 
+
     @intent_handler(AdaptIntent().require('nutrition').require('What')
                     .require('totalNutrlistContext'))
     def what_were_nutrition(self, message):
         return self.repeat_context(message.data['totalNutrlistContext'])
 
     @intent_handler(AdaptIntent().require('nutrition').require('TellMe')
-                    .require('Again')
                     .require('totalNutrlistContext'))
     def tell_nutrition_again(self, message):
         return self.repeat_context(message.data['totalNutrlistContext'])
