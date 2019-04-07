@@ -12,7 +12,7 @@ def search_dish(name):
     r = requests.get(API_URL, params={'q': name})
     if (200 <= r.status_code < 300 and 'hits' in r.json() and
             r.json()['hits']):
-        return r.json()['hits'][0].recipe.ingredientLines
+        return r.json()['hits'][0]['recipe']['ingredientLines']
     else:
         return None
 
