@@ -24,8 +24,8 @@ def search_dish(name):
 #     else:
 #         return None
 
-def search_nutrients(name):
-    s = requests.get(Food_URL, params={'ingr': name2})
+def search_nutrients(foodname):
+    s = requests.get(Food_URL, params={'ingr': foodname})
     if (200 <= s.status_code < 300 and 'hints' in s.json() and s.json()['hints']):
         # cocktail = r.json()['hits'][0]['recipe']['ingredientLines']
         food = s.json()['hints'][0]['food']
