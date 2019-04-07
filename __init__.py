@@ -120,9 +120,14 @@ class RecipeSkill(MycroftSkill):
     def get_recipie(self, message):
         nutrients = search_nutrients(message.data['food'])
         if nutrients:
-            self.speak_dialog('okay', {
-                'food': ', '.join(nutrients[:-1]),
-                'final_food': nutrients[-1]})
+            
+            speakNu = nutrients
+            self.speak_dialog('YouWillNeed', {
+                'ingredients': ', '.join(speakNu[:-1]),
+                'final_ingredient': speakNu[-1]})
+            # self.speak_dialog('okay', {
+            #     'food': ', '.join(nutrients[:-1]),
+            #     'final_food': nutrients[-1]})
             time.sleep(1)
 
             self.set_context('NutrientsContext', str(nutrients))
