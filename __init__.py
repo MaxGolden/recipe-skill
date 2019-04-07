@@ -31,7 +31,6 @@ def search_nutrients(foodname):
         food = s.json()['hints'][0]['food']
         label = food['label']
         nutrients = food['nutrients']
-        print(nutrients)
         names_key = {'ENERC_KCAL': 'Energy', 'PROCNT': 'Protein', 'FAT': 'Fat',
                      'CHOCDF': 'Carbohydrates', 'FIBTG': 'Fiber'}
         nutrients = [nutrients]
@@ -122,7 +121,8 @@ class RecipeSkill(MycroftSkill):
         if nutrients:
 
             speakNu = nutrients
-            self.speak_dialog('', {
+            print(speakNu)
+            self.speak_dialog('okay', {
                 'ingredients': ', '.join(speakNu[:-1]),
                 'final_ingredient': speakNu[-1]})
             # self.speak_dialog('okay', {
