@@ -44,7 +44,7 @@ def search_nutrients(foodname):
         for row in nutrients:
             for key in row.keys():
                 unit_nutrients.append(" ".join((key, str(row[key]), " grams")))
-        new_nutrients = ["the nutrition for "+label+'is']
+        new_nutrients = ["the nutrition for "+label+' is']
         for idx, word in enumerate(unit_nutrients):
             if idx == 0:
                 word = word.replace('grams', 'kilocalories')
