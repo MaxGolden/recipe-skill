@@ -22,7 +22,7 @@ def search_dish(name):
 
 
 class CocktailSkill(MycroftSkill):
-    @intent_file_handler('Recipie.intent')
+    @intent_file_handler('Recipe.intent')
     def get_recipie(self, message):
         cocktail = search_dish(message.data['dish'])
         if cocktail:
