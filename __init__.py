@@ -84,14 +84,10 @@ class RecipeSkill(MycroftSkill):
 
             speakNu = nutrients
             print(speakNu)
-            self.speak_dialog('YouWillNeed', {
-                'ingredients': ', '.join(speakNu[:-1]),
-                'final_ingredient': speakNu[-1]})
-            # self.speak_dialog('okay', {
-            #     'food': ', '.join(nutrients[:-1]),
-            #     'final_food': nutrients[-1]})
+            self.speak_dialog('okay', {
+                'nutrition': ', '.join(speakNu[:-1]),
+                'final_nutrition': speakNu[-1]})
             time.sleep(1)
-
             self.set_context('NutrientsContext', str(nutrients))
         else:
             self.speak_dialog('NotFound')
