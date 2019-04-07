@@ -115,30 +115,7 @@ class RecipeSkill(MycroftSkill):
         return self.repeat_context(message.data['totalNutrlistContext'])
 
 
-    @intent_file_handler('food.intent')
-    def get_recipie(self, message):
-        nutrients = search_nutrients(message.data['food'])
-        if nutrients:
 
-            speakNu = nutrients
-            print(speakNu)
-            self.speak_dialog('okay', {
-                'ingredients': ', '.join(speakNu[:-1]),
-                'final_ingredient': speakNu[-1]})
-            # self.speak_dialog('okay', {
-            #     'food': ', '.join(nutrients[:-1]),
-            #     'final_food': nutrients[-1]})
-            time.sleep(1)
-
-            self.set_context('NutrientsContext', str(nutrients))
-        else:
-            self.speak_dialog('NotFound')
-
-    @intent_handler(AdaptIntent().require('Nutrients').require('TellMe')
-                                 .require('Again')
-                                 .require('IngredientContext'))
-    def tell_ingredients_again(self, message):
-        return self.repeat_context(message.data['NutrientsContext'])
 
 def create_skill():
     return RecipeSkill()
