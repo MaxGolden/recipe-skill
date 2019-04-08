@@ -5,9 +5,9 @@ import requests
 import random
 import time
 
-# API_KEY = 'app_id=88c35ddf&app_key=edd358c155b85aabe7299d492112ef31&q'
 API_URL = 'https://api.edamam.com/search?&app_id=88c35ddf&app_key=edd358c155b85aabe7299d492112ef31&'
 Food_URL = 'https://api.edamam.com/api/food-database/parser?&app_id=33bf21f9&app_key=f92c5494765750636558c8bf9c68fb93&'
+
 
 def search_dish(name):
     r = requests.get(API_URL, params={'q': name})
@@ -17,7 +17,8 @@ def search_dish(name):
     else:
         return None
 
-def dish_recommandation(ingres):
+
+def dish_recommendation(ingres):
     r = requests.get(API_URL, params={'q': ingres})
     if (200 <= r.status_code < 300 and 'hits' in r.json() and
             r.json()['hits']):
@@ -27,6 +28,7 @@ def dish_recommandation(ingres):
         return dish_info
     else:
         return None
+
 
 def search_nutrients(foodname):
     s = requests.get(Food_URL, params={'ingr': foodname})
@@ -55,6 +57,7 @@ def search_nutrients(foodname):
         return new_nutrients
     else:
         return None
+
 
 class RecipeSkill(MycroftSkill):
     @intent_file_handler('recipe.intent')
@@ -86,7 +89,7 @@ class RecipeSkill(MycroftSkill):
         if duration is None:
             return  # user cancelled
         print(duration)
-        dish_infor = dish_recommandation(duration)
+        dish_infor = dish_recommendation(duration)
         if dish_infor:
 
             ingredients = dish_infor['ingredientLines']
@@ -104,7 +107,6 @@ class RecipeSkill(MycroftSkill):
             self.set_context('IngredientContext', str(ingredients))
             self.set_context('caloriesContext', str(calories))
             self.set_context('totalNutrlistContext', str(totalNutrlist))
-
         else:
             self.speak_dialog('NotFound')
 
@@ -141,7 +143,6 @@ class RecipeSkill(MycroftSkill):
     def tell_ingredients_again(self, message):
         return self.repeat_context(message.data['IngredientContext'])
 
-
     @intent_handler(AdaptIntent().require('calories').require('What')
                                  .require('caloriesContext'))
     def what_were_calories(self, message):
@@ -153,7 +154,6 @@ class RecipeSkill(MycroftSkill):
     def tell_calories_again(self, message):
         return self.repeat_context(message.data['caloriesContext'])
 
-
     @intent_handler(AdaptIntent().require('nutritionword').require('What')
                     .require('totalNutrlistContext'))
     def what_were_nutrition(self, message):
@@ -164,8 +164,6 @@ class RecipeSkill(MycroftSkill):
                     .require('totalNutrlistContext'))
     def tell_nutrition_again(self, message):
         return self.repeat_context(message.data['totalNutrlistContext'])
-
-
 
 
 def create_skill():
