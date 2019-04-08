@@ -77,13 +77,11 @@ class RecipeSkill(MycroftSkill):
             self.set_context('IngredientContext', str(ingredients))
             self.set_context('caloriesContext', str(calories))
             self.set_context('totalNutrlistContext', str(totalNutrlist))
-
         else:
             self.speak_dialog('NotFound')
 
     @intent_file_handler('rec.intent')
     def get_recommendation(self, message):
-
         duration = self.get_response('askfood')
         if duration is None:
             return  # user cancelled
