@@ -123,10 +123,9 @@ class RecipeSkill(MycroftSkill):
             self.speak_dialog('NotFound')
 
     @intent_handler(AdaptIntent().require('Nutrients').require('TellMe')
-                                 .require('Again')
-                                 .require('IngredientContext'))
+                                 .require('totalNutrlistContext'))
     def tell_ingredients_again(self, message):
-        return self.repeat_context(message.data['NutrientsContext'])
+        return self.repeat_context(message.data['totalNutrlistContext'])
 
     def repeat_context(self, context):
         self.speak(context)
@@ -155,12 +154,12 @@ class RecipeSkill(MycroftSkill):
         return self.repeat_context(message.data['caloriesContext'])
 
 
-    @intent_handler(AdaptIntent().require('nutrition').require('What')
+    @intent_handler(AdaptIntent().require('nutritionword').require('What')
                     .require('totalNutrlistContext'))
     def what_were_nutrition(self, message):
         return self.repeat_context(message.data['totalNutrlistContext'])
 
-    @intent_handler(AdaptIntent().require('nutrition').require('TellMe')
+    @intent_handler(AdaptIntent().require('nutritionword').require('TellMe')
                     .require('Again')
                     .require('totalNutrlistContext'))
     def tell_nutrition_again(self, message):
