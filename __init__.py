@@ -82,7 +82,7 @@ class RecipeSkill(MycroftSkill):
             self.speak_dialog('NotFound')
 
     @intent_file_handler('recommendation.intent')
-    def get_nutrition(self, message):
+    def get_recommendation(self, message):
 
         duration = self.get_response('ask.how.long')
         if duration is None:
