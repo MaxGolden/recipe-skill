@@ -2,6 +2,7 @@ from mycroft import MycroftSkill, intent_file_handler, intent_handler, \
                     AdaptIntent
 from mycroft.util.log import LOG
 import requests
+import random
 import time
 
 # API_KEY = 'app_id=88c35ddf&app_key=edd358c155b85aabe7299d492112ef31&q'
@@ -16,13 +17,16 @@ def search_dish(name):
     else:
         return None
 
-# def search_recipe_food(name):
-#     r = requests.get(API_URL, params={'q': name})
-#     if (200 <= r.status_code < 300 and 'hits' in r.json() and
-#             r.json()['hits']):
-#         return r.json()['hits'][0]['recipe']
-#     else:
-#         return None
+def dish_recommandation(ingres):
+    r = requests.get(API_URL, params={'q': ingres})
+    if (200 <= r.status_code < 300 and 'hits' in r.json() and
+            r.json()['hits']):
+        hits = r.json()['hits']
+        randomNum = random.randint(1, 10)
+        dish_info = hits[randomNum]['recipe']
+        return dish_info
+    else:
+        return None
 
 def search_nutrients(foodname):
     s = requests.get(Food_URL, params={'ingr': foodname})
@@ -77,13 +81,41 @@ class RecipeSkill(MycroftSkill):
         else:
             self.speak_dialog('NotFound')
 
+    @intent_file_handler('recommendation.intent')
+    def get_nutrition(self, message):
+
+        duration = self.get_response('ask.how.long')
+        if duration is None:
+            return  # user cancelled
+        print(duration)
+        dish_infor = dish_recommandation(duration)
+        if dish_infor:
+
+            ingredients = dish_infor['ingredientLines']
+            label = dish_infor['label']
+            calories = "the total calories is " + str(round(dish_infor['calories'], 2))
+            totalNutr = dish_infor['totalNutrients']
+            totalNutrlist = ["the total nutrients are"]
+            for key, value in totalNutr.items():
+                totalNutrlist.append(' '.join((value['label'], str(round(value['quantity'], 2)),
+                                               value['unit'])))
+            self.speak_dialog('YouCanCook', {
+                'label': label})
+            self.speak(calories)
+
+            self.set_context('IngredientContext', str(ingredients))
+            self.set_context('caloriesContext', str(calories))
+            self.set_context('totalNutrlistContext', str(totalNutrlist))
+
+        else:
+            self.speak_dialog('NotFound')
+
     @intent_file_handler('food.intent')
     def get_nutrition(self, message):
         nutrients = search_nutrients(message.data['food'])
         if nutrients:
 
             speakNu = nutrients
-            print(speakNu)
             self.speak_dialog('okay', {
                 'nutrition': ', '.join(speakNu[:-1]),
                 'final_nutrition': speakNu[-1]})
@@ -131,6 +163,7 @@ class RecipeSkill(MycroftSkill):
         return self.repeat_context(message.data['totalNutrlistContext'])
 
     @intent_handler(AdaptIntent().require('nutrition').require('TellMe')
+                    .require('Again')
                     .require('totalNutrlistContext'))
     def tell_nutrition_again(self, message):
         return self.repeat_context(message.data['totalNutrlistContext'])
