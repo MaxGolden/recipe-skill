@@ -122,7 +122,7 @@ class RecipeSkill(MycroftSkill):
         else:
             self.speak_dialog('NotFound')
 
-    @intent_handler(AdaptIntent().require('Nutrients').require('TellMe')
+    @intent_handler(AdaptIntent().require('Nutrients').require('TellMe').require('forthismeal')
                                  .require('totalNutrlistContext'))
     def tell_ingredients_again(self, message):
         return self.repeat_context(message.data['totalNutrlistContext'])
