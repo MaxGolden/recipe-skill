@@ -81,10 +81,10 @@ class RecipeSkill(MycroftSkill):
         else:
             self.speak_dialog('NotFound')
 
-    @intent_file_handler('recommendation.intent')
+    @intent_file_handler('rec.intent')
     def get_recommendation(self, message):
 
-        duration = self.get_response('ask.how.long')
+        duration = self.get_response('askfood')
         if duration is None:
             return  # user cancelled
         print(duration)
